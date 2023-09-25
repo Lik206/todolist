@@ -1,119 +1,71 @@
 <template>
   <div>
-    <div id="navbar">
-      <b-navbar variant="secondary" type="light">
-        <b-navbar-brand tag="h1" class="mb-0 font-weight-bold text-light"
-          >ToDoList</b-navbar-brand
-        >
-      </b-navbar>
-    </div>
-    <div id="heading" class="container">
-      <b-navbar class="border-bottom border-secondary">
-        <b-navbar variant="light" type="light">
-          <b-navbar-brand tag="h1" class="mt-5 mb-0 font-weight-bold">
-            Task
-          </b-navbar-brand>
-        </b-navbar>
-        <b-navbar class="ml-auto">
-          <button class="btn btn-secondary mt-5" @click="inputDisplay">Add</button>
-        </b-navbar>
-      </b-navbar>
-    </div>
-
-    <div id="content" class="mt-5">
-      <div class="row justify-content-around justify-content-sm-center">
-        <div
-          v-for="(item, index) of updateTask"
-          :key="index"
-          style="width: 18rem"
-          class="col-12 col-sm-9 col-md-6 col-lg-4 ml-3 mt-4"
-        >
-          <div
-            class="card-body card d-flex flex-row bd-highlight mb-3 bg-secondary text-light"
-          >
-            <div class="mr-2"><input class="p-5" type="checkbox" /></div>
-            <div class="col-12">
-              <h5 class="font-weight-bolder">{{ item.task }}</h5>
-              <h2 class="border border-light border-2 opacity-50"></h2>
-              <p class="card-text">
-                {{ item.detail }}
-              </p>
-            </div>
+    <NavbarHeader />
+    <div id="article" class="container">
+      <h3 class="mt-3">Article</h3>
+      <hr />
+      <div v-for="article in articles" :key="article.title">
+        <div class="media position-relative mb-4">
+          <img :src="article.img" class="mr-3 rounded" alt="img" width="200" />
+          <div class="media-body">
+            <h5 class="mt-0">{{ article.title }}</h5>
+            <p>
+              {{ article.content }}
+            </p>
+            <nuxt-link
+              :to="{
+                name: 'article-id',
+                params: {
+                  title: article.title,
+                  content: article.content,
+                  img: article.img,
+                },
+              }"
+              >Continue reading...</nuxt-link
+            >
           </div>
         </div>
       </div>
     </div>
 
-    <div id="input" class="container-fluid mt-5">
-      <div class="d-flex justify-content-center">
-        <form
-          v-if="display"
-          class="border border-5 border-secondary rounded p-4 col-12 col-sm-9 col-md-5 col-lg-4 ml-3 mt-4"
-          @submit.prevent="addTask"
-        >
-          <h5 class="text-center font-weight-bolder">Add Task</h5>
-          <input
-            id="task"
-            v-model="task"
-            value="jel"
-            class="form-control border border-2 border-secondary"
-            type="text"
-            name="task"
-            placeholder="Input title task"
-          />
-          <textarea
-            id="detailTask"
-            v-model="detail"
-            class="form-control border border-2 border-secondary mt-3"
-            name="detail"
-            cols="20"
-            rows="5"
-            style="resize: none"
-            placeholder="Input description"
-            @keyup.enter="addTask"
-          ></textarea>
-          <div class="d-flex justify-content-around mt-4">
-            <button class="btn btn-secondary" type="submit">Submit</button>
-            <button class="btn btn-secondary" @click="cancelTask">Cancel</button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <Todolist />
   </div>
 </template>
 
 <script>
+import NavbarHeader from '../components/NavbarHeader.vue'
+import Todolist from '@/components/TodoList.vue'
+
 export default {
   name: 'IndexPage',
+  components: {
+    NavbarHeader,
+    Todolist,
+  },
   data() {
     return {
-      display: false,
-      task: '',
-      detail: '',
-      updateTask: [],
+      articles: [
+        {
+          title: 'Judul Artikel 1',
+          content:
+            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat dolor explicabo sint quos exercitationem fugiat reiciendis assumenda. Ad quia veritatis, dolor odit, voluptas numquam modi porro eius reprehenderit ullam tenetur?',
+          img: 'https://images.unsplash.com/photo-1649282806617-c51bb282899c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80',
+        },
+        {
+          title: 'Judul Artikel 2',
+          content:
+            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat dolor explicabo sint quos exercitationem fugiat reiciendis assumenda. Ad quia veritatis, dolor odit, voluptas numquam modi porro eius reprehenderit ullam tenetur?',
+          img: 'https://images.unsplash.com/photo-1635732646038-0a1a2fe3f2d6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80',
+        },
+        {
+          title: 'Judul Artikel 3',
+          content:
+            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Placeat dolor explicabo sint quos exercitationem fugiat reiciendis assumenda. Ad quia veritatis, dolor odit, voluptas numquam modi porro eius reprehenderit ullam tenetur?',
+          img: 'https://images.unsplash.com/photo-1640006807976-a6127e9d6fa0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80',
+        },
+      ],
     }
-  },
-  methods: {
-    inputDisplay() {
-      this.display = true
-    },
-    cancelTask() {
-      this.display = false
-    },
-    addTask() {
-      if (this.task !== '' && this.detail !== '') {
-        const item = {
-          form: {
-            task: this.task,
-            detail: this.detail,
-          },
-        }
-
-        this.updateTask.push(item.form)
-        this.task = '' // Reset the input value
-        this.detail = '' // Reset the input value
-      }
-    },
   },
 }
 </script>
+
