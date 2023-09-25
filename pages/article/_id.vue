@@ -9,7 +9,7 @@
 </template>
 <script>
 export default {
-    props: ["title", "img", "content"],
+    props: ["title", "img", "content"], // Jika gambar dan konten tidak tampil pastikan tambahkan props: true di folder .nuxt/router.js di path yang bernama "article-id"
     data() {
         return {
             id: this.$route.params.title
